@@ -11,7 +11,7 @@ const copyrightByLocale: Record<string, string> = {
   en: `Copyright © ${currentYear} open.mp. Built with Docusaurus.`,
   uk: `Copyright © ${currentYear} open.mp. Створено на Docusaurus.`,
   "pt-BR": `Copyright © ${currentYear} open.mp. Feito com Docusaurus.`,
-  "zh-CN": `版权所有 © ${currentYear} open.mp。基于Docusaurus构建"`,
+  "zh-CN": `版权所有 © ${currentYear} open.mp。基于Docusaurus构建。`,
   tr: `Telif Hakkı © ${currentYear} open.mp. Docusaurus ile yapıldı.`,
   fa: `حق نشر © ${currentYear} open.mp. ساخته شده با Docusaurus.`,
 
@@ -112,12 +112,17 @@ const config: Config = {
         name: "server-routes-plugin",
         async contentLoaded({ actions }) {
           const { addRoute } = actions;
+          const { i18n: { locales, defaultLocale } } = context;
 
           // Add the dynamic server detail route.
-          addRoute({
-            path: "/servers/:serverAddress",
-            component: "@site/src/pages/servers/index.tsx",
-          });
+          locales.forEach((locale) => {            
+            const prefix = locale === defaultLocale ? '' : `/${locale}`;
+            addRoute({
+              path: `${prefix}/servers/`,
+              component: "@site/src/pages/servers/index",
+              exact: false,
+            });
+          })
         },
       };
     },
